@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Helpers\FilterHelper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -48,7 +51,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function filterable()
+    public function filterable(): array
     {
         return [
             ['field' => 'name', 'type' => 'str', 'query' => 'where like'],
@@ -56,6 +59,17 @@ class User extends Authenticatable
             ['field' => 'location', 'type' => 'str', 'query' => 'where like'],
             ['field' => 'religion', 'type' => 'enum|str', 'query' => 'where like'],
         ];
+    }
+
+    public function filterFromData(array $values): Collection
+    {
+        $query = FilterHelper::applyFilters(
+            DB::table($this->getTable()),
+            $this->filterable(),
+            $values
+        );
+
+        return $query->get();
     }
 
     public function languages(): BelongsToMany
