@@ -27,11 +27,19 @@ class FilterHelper
         return $query;
     }
 
-    public static function addWhereLike(Builder $query, array $filterDefinition, array $value): Builder {
+    public static function addWhereLike(Builder $query, array $filterDefinition, array $conditions): Builder {
+        if(array_key_exists('value', $conditions)) {
+            $query->where($filterDefinition['field'], 'like', '%' . $conditions['value'] . '%');
+        }
+
         return $query;
     }
 
-    public static function addWhere(Builder $query, array $filterDefinition, array $value): Builder {
+    public static function addWhere(Builder $query, array $filterDefinition, array $conditions): Builder {
+        if(array_key_exists('value', $conditions)) {
+//            $query->where($filterDefinition['field'], $conditions['value']);
+        }
+
         return $query;
     }
 }
