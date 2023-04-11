@@ -16,6 +16,7 @@ class UserController extends Controller
     }
 
     public function get(int $id): JsonResponse {
+        // Replace generated view with json response
         $user = User::FindOrFail($id);
         $user->load('languages');
         $user->load('allergies');
