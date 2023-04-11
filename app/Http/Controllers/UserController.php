@@ -12,7 +12,11 @@ class UserController extends Controller
     }
 
     public function get(int $id) {
-        //
+        $user = User::FindOrFail($id);
+        $user->load('languages');
+        $user->load('allergies');
+
+        return response()->json(['data' => $user]);
     }
 
     public function postQuery() {
