@@ -27,6 +27,6 @@ class UserController extends Controller
     public function postQuery(Request $request): JsonResponse {
         $users = User::filterFromData($request->all());
 
-        return response()->json(['data' => $request->all()]);
+        return response()->json(['data' => $users]);
     }
 }
