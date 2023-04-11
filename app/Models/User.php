@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Helpers\FilterHelper;
+use App\Http\Controllers\UserController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -51,7 +52,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function filterable(): array
+    public static function filterable(): array
     {
         return [
             ['field' => 'name', 'type' => 'str', 'query' => 'where like'],
@@ -61,11 +62,11 @@ class User extends Authenticatable
         ];
     }
 
-    public function filterFromData(array $values): Collection
+    public static function filterFromData(array $values): Collection
     {
         $query = FilterHelper::applyFilters(
-            DB::table($this->getTable()),
-            $this->filterable(),
+            DB::table(with(new self())->getTable()), // new call required due to getTable not being guaranteed when called statically
+            self::filterable(),
             $values
         );
 
