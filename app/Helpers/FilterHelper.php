@@ -27,19 +27,27 @@ class FilterHelper
         return $query;
     }
 
-    public static function addWhereLike(Builder $query, array $filterDefinition, array $conditions): Builder {
-        if(array_key_exists('value', $conditions)) {
-            $query->where($filterDefinition['field'], 'like', '%' . $conditions['value'] . '%');
+    public static function addWhereLike(Builder $query, array $filterDefinition, array $condition): Builder {
+        if(array_key_exists('value', $condition)) {
+            return self::generateWhere($query, $filterDefinition['field'], '%' . $condition['value'] . '%', 'like');
         }
 
         return $query;
     }
 
-    public static function addWhere(Builder $query, array $filterDefinition, array $conditions): Builder {
-        if(array_key_exists('value', $conditions)) {
-//            $query->where($filterDefinition['field'], $conditions['value']);
+    public static function addWhere(Builder $query, array $filterDefinition, array $condition): Builder {
+        if(array_key_exists('value', $condition)) {
+            if (!array_key_exists('operator', $condition)) {
+                return self::generateWhere($query, $filterDefinition['field'], $condition['value']);
+            }
+
+            return self::generateWhere($query, $filterDefinition['field'], $condition['value'], $condition['operator']);
         }
 
         return $query;
+    }
+
+    private static function generateWhere(Builder $query, $field, $value, $operator = '='): Builder {
+        return $query->where($field, $operator, $value);
     }
 }
