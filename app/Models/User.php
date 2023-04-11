@@ -62,12 +62,12 @@ class User extends Authenticatable
         ];
     }
 
-    public static function filterFromData(array $values): Collection
+    public static function filterFromData(array $requests): Collection
     {
         $query = FilterHelper::applyFilters(
             DB::table(with(new self())->getTable()), // new call required due to getTable not being guaranteed when called statically
             self::filterable(),
-            $values
+            $requests['conditions']
         );
 
         return $query->get();
