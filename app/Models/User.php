@@ -52,4 +52,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Language::class, 'languages_users');
     }
+
+    public function allergies(): BelongsToMany
+    {
+        return $this->belongsToMany(Allergy::class, 'allergies_users');
+    }
 }
