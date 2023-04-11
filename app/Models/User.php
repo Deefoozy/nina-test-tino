@@ -48,6 +48,16 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function filterable()
+    {
+        return [
+            ['field' => 'name', 'type' => 'str', 'query' => 'where like'],
+            ['field' => 'age', 'type' => 'int', 'query' => 'where'], // where (match, lower, higher, between)
+            ['field' => 'location', 'type' => 'str', 'query' => 'where like'],
+            ['field' => 'religion', 'type' => 'enum|str', 'query' => 'where like'],
+        ];
+    }
+
     public function languages(): BelongsToMany
     {
         return $this->belongsToMany(Language::class, 'languages_users');
